@@ -7,6 +7,7 @@ public class DicValue {
     private String orderNo;
     private String typeCode;
 
+    
     public String getId() {
         return id;
     }
