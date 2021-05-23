@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
-  <display-name>crm</display-name>
-   
+    <display-name>crm</display-name>
+
     <welcome-file-list>
-    <welcome-file>index.html</welcome-file>
-  </welcome-file-list>
-<!--file过滤器一定要写在servlet上面-->
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+    <!--file过滤器一定要写在servlet上面-->
     <filter>
         <filter-name>EncodingFilter</filter-name>
         <filter-class>com.mytest.crm.web.filter.EncodingFilter</filter-class>
@@ -25,6 +25,10 @@
         <url-pattern>*.jsp</url-pattern>
     </filter-mapping>
 
+    <!--监听创建servletContext application 对象-->
+    <listener>
+        <listener-class>com.mytest.crm.web.listener.SysInitListener</listener-class>
+    </listener>
 
     <!-- 用户控制器 -->
     <servlet>
@@ -57,15 +61,15 @@
         <url-pattern>/workbench/activity/updateRemark.do</url-pattern>
     </servlet-mapping>
 
-<!--    &lt;!&ndash;线索控制器&ndash;&gt;-->
-<!--    <servlet>-->
-<!--        <servlet-name>ClueController</servlet-name>-->
-<!--        <servlet-class>com.mytest.crm.workbench.web.controller.ClueController</servlet-class>-->
-<!--    </servlet>-->
-<!--    <servlet-mapping>-->
-<!--        <servlet-name>ClueController</servlet-name>-->
-<!--        <url-pattern>/workbench/clue/xxx.do</url-pattern>-->
-<!--    </servlet-mapping>-->
+    <!--    &lt;!&ndash;线索控制器&ndash;&gt;-->
+    <!--    <servlet>-->
+    <!--        <servlet-name>ClueController</servlet-name>-->
+    <!--        <servlet-class>com.mytest.crm.workbench.web.controller.ClueController</servlet-class>-->
+    <!--    </servlet>-->
+    <!--    <servlet-mapping>-->
+    <!--        <servlet-name>ClueController</servlet-name>-->
+    <!--        <url-pattern>/workbench/clue/xxx.do</url-pattern>-->
+    <!--    </servlet-mapping>-->
 
 
 </web-app>
