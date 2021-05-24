@@ -218,4 +218,12 @@ public class ActivitySweviceImpl implements ActivityService {
         session.close();
         return flag;
     }
+
+    @Override
+    public List<Activity> getActivityListByClueId(String clueId) {
+        SqlSession session = SqlSessionUtil.getSqlSession();
+        ActivityDao activityDao = session.getMapper(ActivityDao.class);
+        List<Activity> aList = activityDao.getActivityListByClueId(clueId);
+        return aList;
+    }
 }
