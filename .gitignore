@@ -21,6 +21,6 @@
 *.rar
 
 
-*.iml
+#*.iml
 
 crm/target/
