@@ -27,7 +27,7 @@
 
 
     }
-
+    String createBy = ((User)request.getSession().getAttribute("user")).getName();
 </script>
 </body>
 </html>
