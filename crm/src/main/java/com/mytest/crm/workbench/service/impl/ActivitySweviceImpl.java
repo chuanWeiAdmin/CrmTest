@@ -226,4 +226,14 @@ public class ActivitySweviceImpl implements ActivityService {
         List<Activity> aList = activityDao.getActivityListByClueId(clueId);
         return aList;
     }
+
+    @Override
+    public List<Activity> getActivityListByNameAndNotByClueId(Map<String, String> map) {
+
+        SqlSession session =SqlSessionUtil.getSqlSession();
+        ActivityDao  activityDao =session.getMapper(ActivityDao.class);
+
+        List<Activity>aList= activityDao.getActivityListByNameAndNotByClueId(map);
+        return aList;
+    }
 }

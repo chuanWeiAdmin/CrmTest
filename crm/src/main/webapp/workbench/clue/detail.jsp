@@ -54,8 +54,92 @@
 
             showActivityList();
 
+
+            $("#aname").keydown(function (event) {
+                //alert(event.keyCode);
+                if (13 == event.keyCode) {
+                    //alert("点击了回车");
+                    $.ajax({
+                        url: "workbench/clue/getActivityListByNameAndNotByClueId.do",
+                        data: {
+                            "aname": $.trim($("#aname").val()),
+                            "clueId": "${clue.id}"
+                        },
+                        type: "post",
+                        dataType: "json",
+                        success: function (data) {
+                            //应该先判断是否成功了
+                            //data {"success":true/false,dlist:[{1},{2},{3}]}
+
+                            var html = "";
+                            $.each(data, function (i, v) {
+                                html += ' <tr>';
+                                html += '<td><input type="checkbox" name="xz" value="' + v.id + '" /></td>';
+                                html += '<td>' + v.name + '</td>';
+                                html += '<td>' + v.startDate + '</td>';
+                                html += '<td>' + v.endDate + '</td>';
+                                html += '<td>' + v.owner + '</td>';
+                                html += ' </tr>';
+
+                            })//$.each
+                            $("#activitySearchBody").html(html);
+
+                        },
+                        error: function (data) {
+                            console.log(data)
+                            alert("异常");
+                        }
+                    })//$.ajax({
+
+                    return false;
+                }// if (13 == event.keyCode) {
+            })
+
+            //点击关联按钮
+            $("#bundBtn").click(function () {
+                //var $xz = $("input[name=xz]:checked");
+                var $xz = $("input[name=xz]:checked");
+                //alert($xz.length);
+                if ($xz.length > 0) {
+                    var param = "cid=${clue.id}&";
+                    for (var i = 0; i < $xz.length; i++) {
+                        param += "aid=" + $($xz[i]).val();
+                        if (i<$xz.length-1){
+                            param += "&";
+                        }//if
+                    }
+
+
+                    $.ajax({
+                        url: "workbench/clue/bund.do",
+                        data: param,
+                        type: "post",
+                        dataType: "json",
+                        success: function (data) {
+                            if (data.success){
+                               $("#bundModal").modal("hide");
+                                showActivityList();
+                            }else {
+                                alert("关联失败");
+                            }
+                        },
+                        error: function (data) {
+                            console.log(data)
+                            alert("异常");
+                        }
+                    })//ajax
+
+
+                } else {
+                    alert("请选择需要关联的市场活动")
+                }
+
+            })//$("#bundBtn").click(function () {
+
+
         });//页面加载结束
 
+        //展示市场活动
         function showActivityList() {
             $.ajax({
 
@@ -88,24 +172,25 @@
 
         }
 
+        //解除关联
         function unbund(id) {
             $.ajax({
                 url: "workbench/clue/unbund.do",
-                data: {"id":id},
+                data: {"id": id},
                 type: "post",
                 dataType: "json",
                 success: function (data) {
                     /*
                     * data  {"success":true/false}
                     * */
-                    if (data.success){
+                    if (data.success) {
                         //成功刷新列表
                         showActivityList();
-                    }else {
+                    } else {
                         alert("解除关联失败");
                     }
                 },
-                error : function (data){
+                error: function (data) {
                     console.log(data)
                     alert("异常");
                 }
@@ -132,7 +217,7 @@
                 <div class="btn-group" style="position: relative; top: 18%; left: 8px;">
                     <form class="form-inline" role="form">
                         <div class="form-group has-feedback">
-                            <input type="text" class="form-control" style="width: 300px;" placeholder="请输xxx入市场活动名称，支持模糊查询">
+                            <input type="text" id="aname" class="form-control" style="width: 300px;" placeholder="请输入市场活动名称，支持模糊查询">
                             <span class="glyphicon glyphicon-search form-control-feedback"></span>
                         </div>
                     </form>
@@ -148,27 +233,21 @@
                         <td></td>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr>
-                        <td><input type="checkbox"/></td>
-                        <td>发传单</td>
-                        <td>2020-10-10</td>
-                        <td>2020-10-20</td>
-                        <td>zhangsan</td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox"/></td>
-                        <td>发传单</td>
-                        <td>2020-10-10</td>
-                        <td>2020-10-20</td>
-                        <td>zhangsan</td>
-                    </tr>
+                    <tbody id="activitySearchBody">
+                    <%--                    <tr>--%>
+                    <%--                        <td><input type="checkbox"/></td>--%>
+                    <%--                        <td>发传单</td>--%>
+                    <%--                        <td>2020-10-10</td>--%>
+                    <%--                        <td>2020-10-20</td>--%>
+                    <%--                        <td>zhangsan</td>--%>
+                    <%--                    </tr>--%>
+
                     </tbody>
                 </table>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal">关联</button>
+                <button type="button" class="btn btn-primary" id="bundBtn">关联</button>
             </div>
         </div>
     </div>
@@ -521,8 +600,7 @@
         </div>
 
         <div>
-            <a href="javascript:void(0);" data-toggle="modal" data-target="#bundModal"
-               style="text-decoration: none;"><span class="glyphicon glyphicon-plus"></span>关联市场活动</a>
+            <a href="javascript:void(0);" data-toggle="modal" data-target="#bundModal" style="text-decoration: none;"><span class="glyphicon glyphicon-plus"></span>关联市场活动</a>
         </div>
     </div>
 </div>

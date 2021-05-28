@@ -19,7 +19,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ClueController extends HttpServlet {
 
@@ -35,11 +37,17 @@ public class ClueController extends HttpServlet {
             detail(request, response);
         } else if ("/workbench/clue/getActivityListByClueId.do".equals(path)) {
             getActivityListByClueId(request, response);
-        }else if ("/workbench/clue/unbund.do".equals(path)) {
+        } else if ("/workbench/clue/unbund.do".equals(path)) {
             unbund(request, response);
+        } else if ("/workbench/clue/getActivityListByNameAndNotByClueId.do".equals(path)) {
+            getActivityListByNameAndNotByClueId(request, response);
+        } else if ("/workbench/clue/bund.do".equals(path)) {
+            bund(request, response);
         }
 
     }
+
+
     //获得所有用户
     private void getUserList(HttpServletRequest request, HttpServletResponse response) {
         //无脑查出所有用户
@@ -119,22 +127,42 @@ public class ClueController extends HttpServlet {
     private void getActivityListByClueId(HttpServletRequest request, HttpServletResponse response) {
         System.out.println("根据线索id查询关联的市场活动列表");
         String clueId = request.getParameter("clueId");
-        ActivityService as=new ActivitySweviceImpl();
-       List<Activity> aList=as.getActivityListByClueId(clueId);
+        ActivityService as = new ActivitySweviceImpl();
+        List<Activity> aList = as.getActivityListByClueId(clueId);
 
-       PrintJson.printJsonObj(response,aList);
+        PrintJson.printJsonObj(response, aList);
 
     }
 
     //解除关联
     private void unbund(HttpServletRequest request, HttpServletResponse response) {
         System.out.println("执行解除关联操作");
-        String id =request.getParameter("id");
-        ClueService cs=new ClueServiceImpl();
-        boolean flag= cs.unbund(id);
-        PrintJson.printJsonFlag(response,flag);
+        String id = request.getParameter("id");
+        ClueService cs = new ClueServiceImpl();
+        boolean flag = cs.unbund(id);
+        PrintJson.printJsonFlag(response, flag);
 
     }
 
+    //根据用户输入的名称，得到市场活动  注：这里是添加的市场活动，应该不包括已经添加的市场活动
+    private void getActivityListByNameAndNotByClueId(HttpServletRequest request, HttpServletResponse response) {
+        String aname = request.getParameter("aname");
+        String clueId = request.getParameter("clueId");
+        ActivityService as = new ActivitySweviceImpl();
+        Map<String, String> map = new HashMap<>();
+        map.put("aname", aname);
+        map.put("clueId", clueId);
+        List<Activity> aList = as.getActivityListByNameAndNotByClueId(map);
+        PrintJson.printJsonObj(response, aList);
+    }
+
+    //g关联市场活动
+    private void bund(HttpServletRequest request, HttpServletResponse response) {
+        String cid = request.getParameter("cid");
+        String[] aids = request.getParameterValues("aid");
+        ClueService cs = new ClueServiceImpl();
+        boolean flag = cs.bund(cid, aids);
+        PrintJson.printJsonFlag(response, flag);
+    }
 
 }
