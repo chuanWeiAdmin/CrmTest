@@ -43,11 +43,13 @@ public class ClueController extends HttpServlet {
             getActivityListByNameAndNotByClueId(request, response);
         } else if ("/workbench/clue/bund.do".equals(path)) {
             bund(request, response);
+        } else if ("/workbench/clue/getActivityListByName.do".equals(path)) {
+            getActivityListByName(request, response);
+        } else if ("/workbench/clue/convert.do".equals(path)) {
+            convert(request, response);
         }
 
     }
-
-
     //获得所有用户
     private void getUserList(HttpServletRequest request, HttpServletResponse response) {
         //无脑查出所有用户
@@ -164,5 +166,30 @@ public class ClueController extends HttpServlet {
         boolean flag = cs.bund(cid, aids);
         PrintJson.printJsonFlag(response, flag);
     }
+
+    //在线索转换页面，根据输入的信息查询出相应的列表信息
+    private void getActivityListByName(HttpServletRequest request, HttpServletResponse response) {
+        String aname = request.getParameter("aname");
+
+        ActivityService as = new ActivitySweviceImpl();
+        List<Activity> aList = as.getActivityListByName(aname);
+
+        PrintJson.printJsonObj(response,aList);
+
+    }
+
+    //转换线索的事件
+    private void convert(HttpServletRequest request, HttpServletResponse response) {
+
+        String id = request.getParameter("clueId");
+        String money =request.getParameter("money");
+        String name =request.getParameter("name");
+        String expectedDate =request.getParameter("expectedDate");
+        String stage =request.getParameter("stage");
+        String activityId =request.getParameter("activityId");
+
+
+    }
+
 
 }

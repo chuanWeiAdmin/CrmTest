@@ -11,6 +11,7 @@ import com.mytest.crm.workbench.domain.ActivityRemark;
 import com.mytest.crm.workbench.service.ActivityService;
 import org.apache.ibatis.session.SqlSession;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -234,6 +235,17 @@ public class ActivitySweviceImpl implements ActivityService {
         ActivityDao  activityDao =session.getMapper(ActivityDao.class);
 
         List<Activity>aList= activityDao.getActivityListByNameAndNotByClueId(map);
+        return aList;
+    }
+
+    @Override
+    public List<Activity> getActivityListByName(String aname) {
+        SqlSession session = SqlSessionUtil.getSqlSession();
+        ActivityDao activityDao= session.getMapper(ActivityDao.class);
+
+        List<Activity>aList= activityDao.getActivityListByName(aname);
+
+
         return aList;
     }
 }
